@@ -92,3 +92,13 @@ describe('GET /api/v1/health', () => {
     expect(response.body.timestamp).toBeDefined();
   });
 });
+
+describe('GET / (前端頁面)', () => {
+  it('回傳 index.html', async () => {
+    const response = await request(app).get('/');
+
+    expect(response.status).toBe(200);
+    expect(response.text).toContain('0050 + 00631L 動態槓桿計算器');
+    expect(response.text).toContain('holdings-form');
+  });
+});

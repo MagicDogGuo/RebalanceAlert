@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>0050 + 00631L 動態槓桿計算器</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>0050 + 00631L 動態槓桿計算器</h1>
+        <p>輸入持股資料，系統將自動取得最新股價並計算組合槓桿。</p>
+      </header>
+
+      <form id="holdings-form" class="card form-card">
+        <section class="form-section">
+          <h2>元大台灣50 (0050)</h2>
+          <div class="field-row">
+            <label for="shares-0050">持有股數</label>
+            <input id="shares-0050" name="shares-0050" type="number" min="1" step="1" required placeholder="例如 1000" />
+          </div>
+          <div class="field-row">
+            <label for="cost-0050">每股成本（元）</label>
+            <input id="cost-0050" name="cost-0050" type="number" min="0" step="0.01" required placeholder="例如 150.5" />
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>元大台灣50正2 (00631L)</h2>
+          <div class="field-row">
+            <label for="shares-00631L">持有股數</label>
+            <input id="shares-00631L" name="shares-00631L" type="number" min="1" step="1" required placeholder="例如 500" />
+          </div>
+          <div class="field-row">
+            <label for="cost-00631L">每股成本（元）</label>
+            <input id="cost-00631L" name="cost-00631L" type="number" min="0" step="0.01" required placeholder="例如 200" />
+          </div>
+        </section>
+
+        <button type="submit" id="submit-btn" class="submit-btn">計算動態槓桿</button>
+      </form>
+
+      <p id="status" class="status" hidden></p>
+
+      <section id="result" class="card result-card" hidden>
+        <h2>計算結果</h2>
+
+        <div class="result-block">
+          <h3>市場行情</h3>
+          <div id="prices" class="info-grid"></div>
+        </div>
+
+        <div class="result-block">
+          <h3>投資組合摘要</h3>
+          <div id="summary" class="info-grid"></div>
+        </div>
+
+        <div class="result-block">
+          <h3>資產明細</h3>
+          <div id="breakdown"></div>
+        </div>
+
+        <div id="warnings" class="warnings" hidden>
+          <h3>警告</h3>
+          <ul id="warnings-list"></ul>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
