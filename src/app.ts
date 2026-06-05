@@ -1,14 +1,11 @@
 import express from 'express';
+import { errorHandler } from './middleware/errorHandler';
+import v1Router from './routes/v1';
 
 const app = express();
 
 app.use(express.json());
-
-app.get('/api/v1/health', (_req, res) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-  });
-});
+app.use('/api/v1', v1Router);
+app.use(errorHandler);
 
 export default app;
