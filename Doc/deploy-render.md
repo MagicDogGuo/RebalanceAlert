@@ -22,7 +22,7 @@
 | 設定項 | 值 |
 | :--- | :--- |
 | Runtime | Node |
-| Build Command | `npm install && npm run build` |
+| Build Command | `npm install --include=dev && npm run build` |
 | Start Command | `npm start` |
 | Health Check Path | `/api/v1/health` |
 
@@ -55,6 +55,14 @@
 ### Build 失敗：`moduleResolution=node10` is deprecated (TS5107)
 
 TypeScript 6 已棄用 `"moduleResolution": "node"`。本專案 `tsconfig.json` 已改為 `"NodeNext"`。請 pull 最新程式碼後重新部署。
+
+### Build 失敗：找不到 `process`、`console`、`@types/node`
+
+**原因：** `NODE_ENV=production` 時 `npm install` 會跳過 `devDependencies`，導致 `typescript` 與型別定義未安裝。
+
+**解法：**
+1. Build Command 改為 `npm install --include=dev && npm run build`
+2. 本專案已將 `typescript`、`@types/node`、`@types/express` 移至 `dependencies` 雙重保險
 
 ### Build 失敗：`tsc: command not found`
 
