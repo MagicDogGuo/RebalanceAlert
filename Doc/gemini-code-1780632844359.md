@@ -2,6 +2,8 @@
 
 本文件（Product Requirement Document, PRD）旨在明確定義「0050 與 00631L 投資組合動態槓桿計算器」的功能需求、非功能需求、使用者情境（User Stories）以及未來的產品藍圖。本文件將作為後續工程開發、功能測試與介面對接（如 LINE/WhatsApp Bot）的依據。
 
+> **技術實作：** 後端採用 **Node.js + Express + TypeScript** 開發。詳細架構、目錄結構、API 契約與開發流程請參閱 [Express + TypeScript 技術開發文件](./technical-spec-express-typescript.md)。
+
 ---
 
 ## 1. 產品宗旨與痛點解決 (Product Purpose)
@@ -59,8 +61,9 @@
 * 核心計算模組（Model）必須為純函數（Pure Function），確保其在無網路依賴下的單元測試執行時間 **< 10 毫秒**。
 
 ### 4.2 相容性與執行環境 (Compatibility)
-* 程式必須能在 **Node.js v16、v18、v20 及以上** 環境中穩定執行。
-* 網路請求所引用的第三方相依套件（如 `axios`）必須保持在穩定、無安全漏洞（Vulnerability）的版本。
+* 程式必須能在 **Node.js v18、v20 及以上**（建議 LTS）環境中穩定執行。
+* 後端以 **TypeScript** 撰寫，建置後於 Node.js 執行；開發階段使用 `tsx` 或同等工具。
+* 網路請求所引用的第三方相依套件（如 `axios`、`express`）必須保持在穩定、無安全漏洞（Vulnerability）的版本。
 
 ### 4.3 程式碼健全性與維護性 (Maintainability)
 * **邏輯解耦 (SoC)：** 負責「吃」外部 URL API 的程式碼（Service）、財務公式計算邏輯（Model）、與使用者輸入輸出介面（Interface）必須嚴格抽離，便於未來抽換 API 來源或改寫為機器人後端。
@@ -76,7 +79,7 @@
 * 確保財務計算公式與時間防禦、容錯機制 100% 正確。
 
 ### 📌 階段二：RESTful API 化與網頁端擴充
-* 引進 `Express.js` 框架，將計算核心與自動抓取股價的邏輯封裝成一個 HTTP API Endpoint（例如：`POST /api/v1/calculate-leverage`）。
+* 以 **Express.js + TypeScript** 將計算核心與自動抓取股價的邏輯封裝成 HTTP API（主要端點：`POST /api/v1/calculate-leverage`、`GET /api/v1/health`）。請求/回應格式與專案結構見 [技術開發文件](./technical-spec-express-typescript.md)。
 * 開發一個極簡的網頁前端表單，讓使用者輸入庫存即可自動呼叫此後端 API。
 
 ### 📌 階段三：通訊軟體機器人對接 (LINE / WhatsApp Bot)
