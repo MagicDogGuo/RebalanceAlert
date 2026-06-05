@@ -52,6 +52,10 @@
 
 ## 常見問題
 
+### Build 失敗：`moduleResolution=node10` is deprecated (TS5107)
+
+TypeScript 6 已棄用 `"moduleResolution": "node"`。本專案 `tsconfig.json` 已改為 `"NodeNext"`。請 pull 最新程式碼後重新部署。
+
 ### Build 失敗：`tsc: command not found`
 
 Build Command 改為：
