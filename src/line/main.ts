@@ -1,10 +1,15 @@
 import 'dotenv/config';
-import { isLineNotifyEnabled } from '../config';
+import { isLineNotifyEnabled, isMongoEnabled } from '../config';
+import { connectDatabase } from '../db/connect';
 import { sendLeverageAnalysisNotification } from './leverageAnalysisNotifier';
 
 async function run(): Promise<void> {
   if (!isLineNotifyEnabled()) {
     throw new Error('請設定 LINE_CHANNEL_ACCESS_TOKEN 與 LINE_NOTIFY_USER_IDS');
+  }
+
+  if (isMongoEnabled()) {
+    await connectDatabase();
   }
 
   await sendLeverageAnalysisNotification();
