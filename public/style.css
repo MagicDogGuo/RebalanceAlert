@@ -35,6 +35,53 @@ body {
   padding: 1.5rem;
 }
 
+.linebot-card {
+  margin-top: 1.5rem;
+}
+
+.linebot-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  color: #2d3748;
+}
+
+.linebot-intro {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: #5a6270;
+}
+
+.linebot-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.linebot-qr {
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid #e8ecf0;
+  background: #fff;
+}
+
+.linebot-steps {
+  flex: 1;
+  min-width: 200px;
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.linebot-steps li + li {
+  margin-top: 0.6rem;
+}
+
+.linebot-steps strong {
+  color: #06c755;
+}
+
 .form-card {
   margin-top: 1.5rem;
 }
