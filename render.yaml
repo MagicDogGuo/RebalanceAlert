@@ -16,6 +16,11 @@ services:
         value: "160.0"
       - key: FALLBACK_PRICE_00631L
         value: "210.0"
+      - key: MONGODB_DB_NAME
+        value: rebalancealert
+      # 以下請在 Render Dashboard 手動填入（勿寫入 repo）
+      - key: MONGODB_URI
+        sync: false
       # 選用：至 FinMind 註冊後在 Render Dashboard 手動加入
       # - key: FINMIND_TOKEN
       #   sync: false

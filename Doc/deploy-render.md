@@ -35,8 +35,21 @@
 | `FALLBACK_PRICE_0050` | 否 | 預設 `160.0` |
 | `FALLBACK_PRICE_00631L` | 否 | 預設 `210.0` |
 | `FINMIND_TOKEN` | 否 | 選用，提高 API 請求上限 |
+| `MONGODB_URI` | **是** | MongoDB Atlas 連線字串（持股持久化） |
+| `MONGODB_DB_NAME` | 否 | 預設 `rebalancealert` |
+| `MONGODB_PROFILE_ID` | 否 | 預設 `default` |
 
 > **注意：** 不要在 Build 階段前將 `NODE_ENV=production` 設在會影響 `npm install` 的位置，否則 `typescript`（devDependency）不會安裝，build 會失敗。`render.yaml` 的 env 在 runtime 套用，build 不受影響。
+
+### MongoDB Atlas 設定（Render 連線必做）
+
+1. 登入 [MongoDB Atlas](https://cloud.mongodb.com/) → **Network Access**
+2. 新增 **Allow Access from Anywhere**（`0.0.0.0/0`）  
+   Render 免費方案沒有固定 IP，必須開放外網連線。
+3. **Database Access** 確認 DB 使用者有讀寫權限。
+4. 複製 **Connect → Drivers** 的 URI，貼到 Render 的 `MONGODB_URI`（密碼中的特殊字元需 URL encode）。
+
+> **安全：** 不要把 `.env` 或含密碼的 URI commit 到 GitHub；只在 Render Dashboard → Environment 設定。
 
 ## 部署後驗證
 
@@ -48,7 +61,7 @@
 
 - **冷啟動：** 閒置 15 分鐘後首次請求需等待約 30–60 秒
 - **對外網路：** FinMind API 請求正常（Render 允許 outbound HTTPS）
-- **檔案儲存：** 若未來加入 `data.json` 持久化，Render 預設磁碟為暫時性，重部署後資料會消失；需使用 Render Disk 或外部資料庫
+- **資料持久化：** 持股資料已存 MongoDB Atlas，不受 Render 重部署影響；未設定 `MONGODB_URI` 時仍可計算，但不會記住輸入
 
 ## 常見問題
 
