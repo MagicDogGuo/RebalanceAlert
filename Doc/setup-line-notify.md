@@ -256,11 +256,12 @@ LINE 槓桿分析推播已送出
 
 ### 12.2 測試訊息查詢
 
-1. 確認 `.env` 已設定 `LINE_CHANNEL_SECRET`
-2. 啟動伺服器：`npm run dev`
-3. 確認 Webhook URL 已指向你的伺服器且 **Verify** 成功
-4. 在 LINE 聊天室傳送：`槓桿`
-5. 應收到即時槓桿分析回覆
+1. 完成 [§13 關閉 LINE 自動回應](#13-關閉-line-自動回應重要)（必做，否則可能收到官方預設訊息而非槓桿分析）
+2. 確認 `.env`（或 Render 環境變數）已設定 `LINE_CHANNEL_SECRET`
+3. 啟動伺服器：`npm run dev`（或確認 Render 服務已部署）
+4. 確認 Webhook URL 已指向你的伺服器且 **Verify** 成功
+5. 在 LINE 聊天室傳送：`槓桿`
+6. 應收到即時槓桿分析回覆
 
 ### 12.3 啟動伺服器（啟用每日排程）
 
@@ -278,15 +279,46 @@ LINE Webhook 已啟用：POST /webhooks/line
 
 ---
 
-## 13. LINE Console 建議設定（可選）
+## 13. 關閉 LINE 自動回應（重要）
 
-在 Developers Console → **Messaging API** 分頁：
+若傳「槓桿」後收到 **「本帳號無法個別回復用戶訊息」**，代表 LINE 官方帳號的**自動回應**攔截了訊息，而非本專案的 Webhook 回覆。Webhook Verify 成功也仍可能發生此問題，**必須關閉自動回應**。
 
-| 設定項 | 建議 | 說明 |
+本專案正常回覆時，應顯示槓桿分析摘要；若 User ID 未授權，則顯示「此帳號未授權使用查詢功能。」
+
+### 13.1 LINE Official Account Manager
+
+1. 前往 [LINE Official Account Manager](https://manager.line.biz/)
+2. 進入你的官方帳號 → 右上角 **設定** → 左側 **回應設定**
+3. 依下表設定：
+
+| 設定項 | 應設為 | 說明 |
 | :--- | :--- | :--- |
-| Use webhook | **開啟** | 訊息查詢必填 |
-| Greeting message | 可關閉 | 本專案會在加好友時自動回覆歡迎訊息 |
-| Auto-reply messages | 建議關閉 | 避免與 Webhook 回覆衝突 |
+| 回應模式 | **聊天機器人** | 才能將訊息轉給 Messaging API Webhook |
+| Webhook | **啟用** | 與 Developers Console 的 Use webhook 連動 |
+| 自動回應訊息 | **關閉** | 避免與本專案 Reply 衝突 |
+
+> 若同時啟用「自動回應訊息」與 Webhook，且兩者設了相同關鍵字，使用者可能收到**兩則**回覆。本專案只需 Webhook，請關閉自動回應。
+
+### 13.2 LINE Developers Console
+
+1. 前往 [LINE Developers Console](https://developers.line.biz/console/) → 你的 Messaging API Channel
+2. 分頁選 **Messaging API**
+3. 依下表設定：
+
+| 設定項 | 應設為 | 說明 |
+| :--- | :--- | :--- |
+| Use webhook | **Enabled（開啟）** | 訊息查詢必填 |
+| Greeting message | **Disabled（關閉）** | 本專案會在加好友時透過 Webhook 回覆歡迎訊息 |
+| Auto-reply messages | **Disabled（關閉）** | 避免觸發「本帳號無法個別回復用戶訊息」等預設回覆 |
+
+Greeting message / Auto-reply messages 旁若有 **Edit** 按鈕，點擊後會跳轉到 Official Account Manager，請在該處將功能設為關閉。
+
+### 13.3 設定完成後驗證
+
+1. 確認 Webhook URL 已 Verify 成功（例如 `https://rebalance-alert.onrender.com/webhooks/line`）
+2. 在 LINE 傳送 `槓桿`
+3. 預期收到槓桿分析摘要（含總市值、整體槓桿、再平衡建議）
+4. 若部署在 Render，可在 **Logs** 確認是否出現 `LINE Webhook 收到 1 個事件`
 
 ---
 
@@ -352,6 +384,8 @@ src/
 | `LINE 簽章驗證失敗` | Channel Secret 錯誤 | 確認 `LINE_CHANNEL_SECRET` 與 Console 一致 |
 | `此帳號未授權使用查詢功能` | User ID 不在名單 | 將 User ID 加入 `LINE_NOTIFY_USER_IDS` |
 | Webhook Verify 失敗 | 伺服器未啟動或非 HTTPS | 本機需用 ngrok；確認 `/webhooks/line` 可連線 |
+| **本帳號無法個別回復用戶訊息** | 自動回應未關閉，或回應模式非聊天機器人 | 依 [§13](#13-關閉-line-自動回應重要) 關閉自動回應並啟用 Webhook |
+| Verify 成功但傳訊息仍無槓桿分析 | Render 冷啟動或環境變數未設 | 多等 30–60 秒再試；確認 Render 已設 LINE 環境變數 |
 
 ---
 
@@ -364,6 +398,8 @@ src/
 - [ ] 已用手機加官方帳號為好友
 - [ ] 已取得 User ID 並寫入 `LINE_NOTIFY_USER_IDS`
 - [ ] 已設定 Webhook URL 並 Verify 成功
+- [ ] 已關閉自動回應（Official Account Manager + Developers Console，見 §13）
+- [ ] 回應模式設為「聊天機器人」、Webhook 已啟用
 - [ ] 已設定 `LINE_NOTIFY_CRON` 與時區
 - [ ] MongoDB 已有持股資料（`MONGODB_URI` 已設定）
 - [ ] `npm run line:notify` 測試推播成功
