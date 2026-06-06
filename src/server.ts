@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import app from './app';
-import { isMongoEnabled } from './config';
+import { isLineWebhookEnabled, isMongoEnabled } from './config';
 import { connectDatabase } from './db/connect';
+import { startLineNotificationScheduler } from './line/scheduler';
 
 const PORT = Number(process.env.PORT) || 3000;
 
@@ -14,6 +15,13 @@ async function start(): Promise<void> {
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
+    startLineNotificationScheduler();
+
+    if (isLineWebhookEnabled()) {
+      console.log(`LINE Webhook 已啟用：POST /webhooks/line`);
+    } else {
+      console.warn('LINE Webhook 未啟用：請設定 LINE_CHANNEL_ACCESS_TOKEN 與 LINE_CHANNEL_SECRET');
+    }
   });
 }
 

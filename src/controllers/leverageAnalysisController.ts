@@ -1,10 +1,8 @@
 import type { Request, Response } from 'express';
 import { buildCalculateResponse } from './calculateController';
-import { calculateLeverageAnalysis, SavedHoldingsNotFoundError } from '../models/portfolio';
-import { fetchStockPrices } from '../services/stockPriceService';
-import { getSavedHoldings } from '../services/portfolioStorageService';
+import { getLeverageAnalysis } from '../services/leverageAnalysisService';
 import type { LeverageAnalysisResponse } from '../types/api';
-import type { PortfolioResult } from '../types/portfolio';
+import type { LeverageAnalysisResult, PortfolioHoldings, PortfolioResult } from '../types/portfolio';
 import type { FetchStockPricesResult } from '../types/stockPrice';
 
 function mapBreakdown(result: PortfolioResult): LeverageAnalysisResponse['current']['breakdown'] {
@@ -27,9 +25,9 @@ function mapAnalysisSection(result: PortfolioResult): LeverageAnalysisResponse['
 }
 
 export function buildLeverageAnalysisResponse(
-  holdings: NonNullable<Awaited<ReturnType<typeof getSavedHoldings>>>,
+  holdings: PortfolioHoldings,
   stockPrices: FetchStockPricesResult,
-  analysis: ReturnType<typeof calculateLeverageAnalysis>,
+  analysis: LeverageAnalysisResult,
 ): LeverageAnalysisResponse {
   const calculateResponse = buildCalculateResponse(stockPrices, analysis.current);
 
@@ -44,13 +42,5 @@ export function buildLeverageAnalysisResponse(
 }
 
 export async function analyzeLeverageFromSaved(_req: Request, res: Response<LeverageAnalysisResponse>): Promise<void> {
-  const holdings = await getSavedHoldings();
-  if (!holdings) {
-    throw new SavedHoldingsNotFoundError();
-  }
-
-  const stockPrices = await fetchStockPrices();
-  const analysis = calculateLeverageAnalysis(holdings, stockPrices.prices);
-
-  res.json(buildLeverageAnalysisResponse(holdings, stockPrices, analysis));
+  res.json(await getLeverageAnalysis());
 }

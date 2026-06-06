@@ -38,6 +38,11 @@
 | `MONGODB_URI` | **是** | MongoDB Atlas 連線字串（持股持久化） |
 | `MONGODB_DB_NAME` | 否 | 預設 `rebalancealert` |
 | `MONGODB_PROFILE_ID` | 否 | 預設 `default` |
+| `LINE_CHANNEL_ACCESS_TOKEN` | LINE 功能必填 | LINE Messaging API Token，詳見 [LINE 設定](./setup-line-notify.md) |
+| `LINE_CHANNEL_SECRET` | 訊息查詢必填 | Webhook 簽章驗證用 |
+| `LINE_NOTIFY_USER_IDS` | 推播時必填 | 推播對象與查詢授權名單（多人以逗號分隔） |
+| `LINE_NOTIFY_CRON` | 否 | 預設 `0 9 * * *`（每天 09:00） |
+| `LINE_NOTIFY_TIMEZONE` | 否 | 預設 `Asia/Taipei` |
 
 > **注意：** 不要在 Build 階段前將 `NODE_ENV=production` 設在會影響 `npm install` 的位置，否則 `typescript`（devDependency）不會安裝，build 會失敗。`render.yaml` 的 env 在 runtime 套用，build 不受影響。
 
@@ -92,3 +97,7 @@ npm install --include=dev && npm run build
 ### FinMind 請求失敗
 
 檢查 Render Logs；若頻繁觸發 rate limit，請設定 `FINMIND_TOKEN`。
+
+### LINE 推播未送達
+
+請依 [LINE 推播設定教學](./setup-line-notify.md) 檢查 Token、User ID 與好友狀態。Render 免費方案休眠可能錯過排程，可改用手動執行 `npm run line:notify` 或外部 Cron。

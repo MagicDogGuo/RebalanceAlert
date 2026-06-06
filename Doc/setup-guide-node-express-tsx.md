@@ -443,6 +443,7 @@ import 'dotenv/config';
 | 編譯給正式環境 | `npm run build` |
 | 正式執行 | `npm start` |
 | 測試健康檢查 | 瀏覽器開 `http://localhost:3000/api/v1/health` |
+| 測試 LINE 推播 | `npm run line:notify`（需先完成 [LINE 設定](./setup-line-notify.md)） |
 
 ---
 
@@ -450,3 +451,4 @@ import 'dotenv/config';
 
 - [產品需求規劃 (PRD)](./gemini-code-1780632844359.md)
 - [Express + TypeScript 技術規格](./technical-spec-express-typescript.md)
+- [LINE 每日槓桿分析推播設定](./setup-line-notify.md)

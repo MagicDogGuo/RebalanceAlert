@@ -9,7 +9,8 @@
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "cli": "tsx src/cli/main.ts"
+    "cli": "tsx src/cli/main.ts",
+    "line:notify": "tsx src/line/main.ts"
   },
   "keywords": [],
   "license": "ISC",
@@ -23,10 +24,12 @@
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "mongoose": "^9.6.3",
+    "node-cron": "^3.0.3",
     "swagger-ui-express": "^5.0.1",
     "typescript": "~5.8.2"
   },
   "devDependencies": {
+    "@types/node-cron": "^3.0.11",
     "@types/supertest": "^6.0.2",
     "@types/swagger-ui-express": "^4.1.8",
     "supertest": "^7.0.0",

@@ -211,7 +211,7 @@ FALLBACK_PRICE_00631L=210.0
 | :--- | :--- | :--- |
 | 一 | CLI + 核心 Model/Service | 可先以 `tsx src/cli/main.ts` 驗證公式與 API |
 | 二 | Express REST API | `POST /api/v1/calculate-leverage`、錯誤中介層 |
-| 三 | LINE / WhatsApp Webhook | 新增 `routes/webhooks/`，複用既有 Service |
+| 三 | LINE 每日推播（已實作） | `src/line/` + `node-cron`，詳見 [LINE 推播設定](./setup-line-notify.md) |
 
 建議實作順序：**Model 單元測試 → StockPrice Service → CLI 驗證 → Express API**。
 
@@ -272,3 +272,4 @@ npm test
 
 - [產品需求規劃文件 (PRD)](./gemini-code-1780632844359.md)
 - [Node + Express + tsx 環境設定教學](./setup-guide-node-express-tsx.md)
+- [LINE 每日槓桿分析推播設定](./setup-line-notify.md)
