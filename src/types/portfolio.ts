@@ -41,3 +41,28 @@ export interface PortfolioResult {
   summary: PortfolioSummary;
   breakdown: AssetBreakdown[];
 }
+
+export interface RebalanceTrade {
+  symbol: Symbol;
+  side: 'buy' | 'sell';
+  shares: number;
+  estimatedAmount: number;
+}
+
+export type RebalanceAction = 'none' | 'reduce_leverage' | 'increase_leverage';
+
+export interface RebalanceAdvice {
+  targetLeverage: number;
+  currentLeverage: number;
+  leverageDrift: number;
+  action: RebalanceAction;
+  summary: string;
+  trades: RebalanceTrade[];
+  estimatedLeverageAfterRebalance: number | null;
+}
+
+export interface LeverageAnalysisResult {
+  current: PortfolioResult;
+  atPurchase: PortfolioResult;
+  rebalance: RebalanceAdvice;
+}

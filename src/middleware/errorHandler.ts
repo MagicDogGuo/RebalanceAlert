@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { PortfolioValidationError } from '../models/portfolio';
+import { PortfolioValidationError, SavedHoldingsNotFoundError } from '../models/portfolio';
 import type { ErrorResponse } from '../types/api';
 
 export function errorHandler(
@@ -10,6 +10,11 @@ export function errorHandler(
 ): void {
   if (error instanceof PortfolioValidationError) {
     res.status(400).json({ error: error.message });
+    return;
+  }
+
+  if (error instanceof SavedHoldingsNotFoundError) {
+    res.status(404).json({ error: error.message });
     return;
   }
 
