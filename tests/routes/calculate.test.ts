@@ -4,9 +4,14 @@ import app from '../../src/app';
 import { calculatePortfolio } from '../../src/models/portfolio';
 
 const mockFetchStockPrices = vi.fn();
+const mockSaveHoldings = vi.fn();
 
 vi.mock('../../src/services/stockPriceService', () => ({
   fetchStockPrices: (...args: unknown[]) => mockFetchStockPrices(...args),
+}));
+
+vi.mock('../../src/services/portfolioStorageService', () => ({
+  saveHoldings: (...args: unknown[]) => mockSaveHoldings(...args),
 }));
 
 const validBody = {
@@ -26,6 +31,7 @@ describe('POST /api/v1/calculate-leverage', () => {
       prices: { '0050': 104.15, '00631L': 36.67 },
       warnings: [],
     });
+    mockSaveHoldings.mockResolvedValue(undefined);
   });
 
   it('回傳 200 與計算結果', async () => {
@@ -42,6 +48,7 @@ describe('POST /api/v1/calculate-leverage', () => {
     expect(response.body.summary.leverage).toBe(expected.summary.leverage);
     expect(response.body.breakdown).toHaveLength(2);
     expect(response.body.warnings).toEqual([]);
+    expect(mockSaveHoldings).toHaveBeenCalledWith(validBody.holdings);
   });
 
   it('缺少 holdings 回傳 400', async () => {

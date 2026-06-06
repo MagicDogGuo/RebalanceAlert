@@ -14,4 +14,13 @@ export const config = {
     '0050': readNumber(process.env.FALLBACK_PRICE_0050, 160.0),
     '00631L': readNumber(process.env.FALLBACK_PRICE_00631L, 210.0),
   } satisfies PortfolioPrices,
+  mongodb: {
+    uri: process.env.MONGODB_URI,
+    dbName: process.env.MONGODB_DB_NAME ?? 'rebalancealert',
+    profileId: process.env.MONGODB_PROFILE_ID ?? 'default',
+  },
 };
+
+export function isMongoEnabled(): boolean {
+  return Boolean(config.mongodb.uri);
+}

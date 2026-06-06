@@ -132,6 +132,32 @@ function getHoldingsFromForm() {
   };
 }
 
+function setHoldingsInForm(holdings) {
+  document.getElementById('shares-0050').value = holdings['0050'].shares;
+  document.getElementById('cost-0050').value = holdings['0050'].costPerShare;
+  document.getElementById('shares-00631L').value = holdings['00631L'].shares;
+  document.getElementById('cost-00631L').value = holdings['00631L'].costPerShare;
+}
+
+async function loadSavedHoldings() {
+  try {
+    const response = await fetch('/api/v1/holdings');
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error ?? '讀取持股資料失敗');
+    }
+
+    if (data.holdings) {
+      setHoldingsInForm(data.holdings);
+    }
+  } catch (error) {
+    setStatus(error.message ?? '讀取已儲存持股失敗', 'error');
+  }
+}
+
+loadSavedHoldings();
+
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearStatus();

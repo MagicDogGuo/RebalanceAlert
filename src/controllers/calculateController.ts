@@ -5,6 +5,7 @@ import {
   validateHoldings,
 } from '../models/portfolio';
 import { fetchStockPrices } from '../services/stockPriceService';
+import { saveHoldings } from '../services/portfolioStorageService';
 import type { CalculateLeverageResponse } from '../types/api';
 import type { PortfolioHoldings, PortfolioResult } from '../types/portfolio';
 import type { FetchStockPricesResult } from '../types/stockPrice';
@@ -53,6 +54,8 @@ export async function calculateLeverage(req: Request, res: Response): Promise<vo
   const holdings = parseHoldingsBody(req.body);
   const stockPrices = await fetchStockPrices();
   const result = calculatePortfolio(holdings, stockPrices.prices);
+
+  await saveHoldings(holdings);
 
   res.json(buildCalculateResponse(stockPrices, result));
 }

@@ -4,6 +4,10 @@ import { PortfolioValidationError } from '../../src/models/portfolio';
 import type { PortfolioResult } from '../../src/types/portfolio';
 import type { FetchStockPricesResult } from '../../src/types/stockPrice';
 
+vi.mock('../../src/services/portfolioStorageService', () => ({
+  saveHoldings: vi.fn().mockResolvedValue(undefined),
+}));
+
 const stockPrices: FetchStockPricesResult = {
   quotes: {
     '0050': { symbol: '0050', close: 104.15, date: '2026-06-05', source: 'finmind' },

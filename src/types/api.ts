@@ -36,3 +36,11 @@ export interface CalculateLeverageResponse {
 export interface ErrorResponse {
   error: string;
 }
+
+export interface SaveHoldingsRequest {
+  holdings: CalculateLeverageRequest['holdings'];
+}
+
+export interface GetHoldingsResponse {
+  holdings: SaveHoldingsRequest['holdings'] | null;
+}
